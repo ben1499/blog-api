@@ -62,8 +62,7 @@ exports.login = [
       if (!match) {
         return res.status(400).json({ message: "Password is incorrect" });
       }
-      console.log("hello");
-      jwt.sign({ user: req.body.username }, process.env.JWT_SECRET, (err, token) => {
+      jwt.sign({ user: req.body.username }, process.env.JWT_SECRET, { expiresIn: "1d"}, (err, token) => {
         res.status(200).json({ token });
       })
     }

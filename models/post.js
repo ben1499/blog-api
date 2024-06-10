@@ -12,7 +12,7 @@ const PostSchema = new Schema({
 
 PostSchema.virtual("timestamp_formatted").get(function() {
   const dateTime = DateTime.fromMillis(this.timestamp);
-  return dateTime.toFormat("yyyy-LL-dd HH:mm:ss");
+  return dateTime.toFormat("dd-LL-yyyy HH:mm:ss");
 })
 
 module.exports = mongoose.model("Post", PostSchema);

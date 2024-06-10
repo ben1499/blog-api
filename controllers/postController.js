@@ -7,7 +7,13 @@ exports.post_list = asyncHandler(async (req, res, next) => {
   const allPosts = await Post.find().exec();
 
   if (allPosts) {
-    res.status(200).json({ data: allPosts });
+    const posts = allPosts.map((post) => {
+      return {
+        ...post.toObject(),
+        timestamp_formatted: post.timestamp_formatted
+      }
+    })
+    res.status(200).json({ data: posts });
   }
 })
 

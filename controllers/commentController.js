@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const Comment = require("../models/comment");
 const Post = require("../models/post");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
   
 exports.post_comment_list = asyncHandler(async (req, res, next) => {  
   const postComments = await Comment.find({ post_id: req.params.id }).exec();
@@ -10,7 +10,14 @@ exports.post_comment_list = asyncHandler(async (req, res, next) => {
   if (!postComments) {
     res.status(400).json({ error: "Comments not found" })
   } else {
-    res.status(200).json({ data: postComments })
+
+    const comments = postComments.map((comment) => {
+      return {
+        ...comment.toObject(),
+        timestamp_formatted: comment.timestamp_formatted
+      }
+    })
+    res.status(200).json({ data: comments })
   }
 })
 

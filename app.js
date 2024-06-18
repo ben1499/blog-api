@@ -7,6 +7,10 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require('dotenv').config();
 
+const compression = require("compression");
+const helmet = require("helmet");
+const RateLimit = require("express-rate-limit");
+
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const postsRouter = require("./routes/posts");
@@ -15,6 +19,27 @@ const commentsRouter = require("./routes/comments");
 const app = express();
 
 app.use(cors());
+
+// Set up rate limiter: maximum of twenty requests per minute
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 20,
+});
+// Apply rate limiter to all requests
+app.use(limiter);
+
+app.use(compression()); // Compress all routes
+
+// Add helmet to the middleware chain.
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      "script-src": ["'self'"],
+    },
+  }),
+);
+
+
 
 // mongoose setup
 mongoose.set("strictQuery", false);

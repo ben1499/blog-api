@@ -4,8 +4,15 @@ const jwt = require("jsonwebtoken");
 const Post = require("../models/post");
 
 exports.post_list = asyncHandler(async (req, res, next) => {
-  const allPosts = await Post.find().exec();
+  const { is_published } = req.query;
 
+  let query = {};
+
+  if (is_published !== undefined) {
+    query = { is_published: JSON.parse(is_published) }
+  }
+
+  const allPosts = await Post.find(query).exec();
   if (allPosts) {
     const posts = allPosts.map((post) => {
       return {
